@@ -9,7 +9,7 @@
 import { ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import { SITE } from '../../config'
+import { SITE } from '~/vitepress.config'
 // import Watermark from './components/watermark'
 
 const color = ref('rgba(0,0,0,.15)')

@@ -1,13 +1,27 @@
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
-import { SITE } from '../config'
+import { SITE } from '../vitepress.config'
+import { createVitePlugins } from '../build/vite/index'
+import { createMarkdownPlugins } from '../build/vite/markdown'
+
+const {
+  lang = 'zh-CN',
+  title = 'zeMinng',
+  description,
+  cleanUrls = true,
+} = SITE
 
 export default defineConfig({
-  lang: SITE.lang,
-  title: SITE.title || 'zeMinng',
-  description: SITE.description,
-  cleanUrls: SITE.cleanUrls,
+  lang,
+  title,
+  description,
+  cleanUrls,
   base: '/',
   // ignoreDeadLinks: true,
+  markdown: {
+    lineNumbers: true,
+    config: createMarkdownPlugins as any,
+  },
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
@@ -16,5 +30,14 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
     ]
+  },
+  vite: {
+    plugins: createVitePlugins(),
+    resolve: {
+      alias: [
+        { find: '@', replacement: fileURLToPath(new URL('./', import.meta.url)) },
+        { find: '~', replacement: fileURLToPath(new URL('../', import.meta.url)) },
+      ]
+    }
   }
 })

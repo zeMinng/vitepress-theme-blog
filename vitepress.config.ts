@@ -1,4 +1,6 @@
-export const SITE = {
+import type { SiteConfig } from '~/types/configType'
+
+export const SITE: SiteConfig = {
   author: 'zeMinng',
   lang: 'zh-CN',
   title: 'vitepress-theme-blog',
