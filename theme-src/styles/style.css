@@ -1,0 +1,81 @@
+/**
+ * Liquid glass effect for VitePress DefaultTheme VPNavBar
+ * - Uses backdrop-filter for blur + saturation
+ * - Keeps good contrast in both light/dark themes
+ * - Avoids touching VitePress source; pure override
+ */
+
+:root {
+  /* tweak these to taste */
+  --glass-blur: 14px;
+  --glass-saturate: 180%;
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  /* VitePress tokens (safe overrides) */
+  --vp-nav-bg-color: rgba(255, 255, 255, 0.55);
+  --vp-nav-screen-bg-color: rgba(255, 255, 255, 0.75);
+}
+
+html.dark {
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  --vp-nav-bg-color: rgba(18, 18, 20, 0.45);
+  --vp-nav-screen-bg-color: rgba(18, 18, 20, 0.72);
+}
+
+/* Base bar */
+.VPNavBar {
+  background-color: var(--vp-nav-bg-color) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Add a subtle liquid highlight layer */
+.VPNavBar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1200px 200px at 20% 0%, rgba(255, 255, 255, 0.55), transparent 60%),
+    radial-gradient(900px 240px at 80% 0%, rgba(120, 200, 255, 0.25), transparent 55%);
+  opacity: 0.75;
+}
+
+html.dark .VPNavBar::before {
+  background:
+    radial-gradient(1200px 220px at 20% 0%, rgba(255, 255, 255, 0.12), transparent 60%),
+    radial-gradient(900px 260px at 80% 0%, rgba(120, 200, 255, 0.10), transparent 55%);
+  opacity: 0.9;
+}
+
+/* Keep nav content above the ::before layer */
+.VPNavBar .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile screen menu background matches glass */
+.VPNavScreen {
+  background-color: var(--vp-nav-screen-bg-color) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .VPNavBar,
+  .VPNavScreen {
+    background-color: rgba(255, 255, 255, 0.92) !important;
+  }
+  html.dark .VPNavBar,
+  html.dark .VPNavScreen {
+    background-color: rgba(18, 18, 20, 0.92) !important;
+  }
+}
+
+
