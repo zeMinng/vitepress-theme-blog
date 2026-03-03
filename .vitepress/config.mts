@@ -9,6 +9,7 @@ const {
   title = 'zeMinng',
   description,
   cleanUrls = true,
+  favicon
 } = SITE
 
 export default defineConfig({
@@ -22,6 +23,9 @@ export default defineConfig({
     lineNumbers: true,
     config: createMarkdownPlugins as any,
   },
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: favicon as string }],
+  ],
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },

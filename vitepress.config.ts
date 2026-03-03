@@ -7,5 +7,6 @@ export const SITE: SiteConfig = {
   description: 'A minimalist blog theme for VitePress. | 一款为 VitePress 设计的极简博客主题',
   cleanUrls: true,
   watermark: true,
+  favicon: '/favicon.ico',
   ogImage: 'logo.png',
 }
