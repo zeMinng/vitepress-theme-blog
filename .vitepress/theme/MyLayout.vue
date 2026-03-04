@@ -1,29 +1,23 @@
 <template>
   <DefaultTheme.Layout />
   <ClientOnly>
-    <Watermark v-if="VitePressConfig.watermark" fullscreen fixed content="zeMing" :zIndex="0" :fontSize="18" :color="color" />
+    <Watermark v-if="enable" fullscreen fixed :content="text" :zIndex="0" :textStyle="{ color, fontSize }" />
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { VitePressConfig } from '~/vitepress.config'
-// import Watermark from './components/watermark'
+import Watermark from './components/watermark'
 
-const color = ref('rgba(0,0,0,.15)')
-const { isDark } = useData()
-watch(
-  isDark,
-  (old) => {
-    color.value = old ? 'rgba(0,0,0,.7)' : 'rgba(0,0,0,.15)'
-  },
-  {
-    immediate: true,
-    deep: true,
-  },
-)
+const { watermarkConfig: { enable, text, lightColor, darkColor, fontSize }} = VitePressConfig
+
+const color = computed(() => {
+  const { isDark } = useData()
+  return isDark.value ? darkColor : lightColor
+})
 </script>
 
 <style>

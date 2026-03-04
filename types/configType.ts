@@ -5,10 +5,10 @@ import { DefaultTheme } from 'vitepress'
  */
 export interface VitePressConfigType {
   author: string // 作者
-  watermark: boolean // 水印
   ogImage: string // logo
   siteConfig: SiteConfig // 站点配置
   themeConfig: DefaultTheme.Config & themeConfig
+  watermarkConfig: WatermarkConfig // 水印配置
 }
 
 // 站点配置
@@ -22,5 +22,14 @@ interface SiteConfig {
 
 // 主题配置
 interface themeConfig {
-  
+
+}
+
+// 水印配置
+interface WatermarkConfig {
+  enable: boolean // 是否启用水印
+  text: string // 水印文本
+  lightColor: string // 水印颜色
+  darkColor: string // 水印颜色
+  fontSize: number // 水印字体大小
 }

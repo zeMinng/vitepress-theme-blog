@@ -1,5 +1,4 @@
 import type { Theme } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
 import BlogTheme from '../../theme-src' 
 import Layout from './MyLayout.vue'
 

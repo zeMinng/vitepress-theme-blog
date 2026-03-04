@@ -14,22 +14,13 @@
   // --vp-c-bg-reverse-rgb: 255, 255, 255;
 }
 
-
-
 .VPNavBar, 
 .VPLocalNav {
-  // background-color: var(--vp-nav-bg-color);
   -webkit-backdrop-filter: saturate(180%) blur(12px);
   backdrop-filter: saturate(180%) blur(12px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  // border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .dark .VPNavBar {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.VPNavBar,
-.VPFooter {
-  transition: none !important;
-  border: none !important;
 }

@@ -2,7 +2,6 @@ import type { VitePressConfigType } from '~/types/configType'
 
 export const VitePressConfig: VitePressConfigType = {
   author: 'zeMinng',
-  watermark: true,
   ogImage: 'logo.png',
   siteConfig: {
     title: 'vitepress-theme-blog',
@@ -16,15 +15,24 @@ export const VitePressConfig: VitePressConfigType = {
     logo: '/logo.png',
     outline: [2, 4],
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: '文章', link: '/posts/' },
+      { text: '标签', link: '/tags/' },
+      { text: '关于', link: '/about/' },
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/zeMinng' }
+      { icon: 'github', link: 'https://github.com/zeMinng' },
+      { icon: 'x', link: 'https://twitter.com/xiaoxiaoemil' }
     ],
     footer: {
       message: 'CC BY-NC-SA 4.0 协议',
       copyright: `版权所有 © 2023-${new Date().getFullYear()} zeMinng | 保留所有权利` 
     }
-  }
+  },
+  watermarkConfig: {
+    enable: true,
+    text: 'vitepress-theme-blog',
+    darkColor: 'rgba(0,0,0,.7)',
+    lightColor: 'rgba(0,0,0,.15)',
+    fontSize: 16,
+  },
 } as const
