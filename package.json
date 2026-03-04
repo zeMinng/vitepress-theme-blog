@@ -5,7 +5,7 @@
   "description": "A minimalist blog theme for VitePress. | 一款为 VitePress 设计的极简博客主题",
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev --host",
+    "dev": "vitepress dev --host --open",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },

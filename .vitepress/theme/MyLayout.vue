@@ -1,7 +1,7 @@
 <template>
   <DefaultTheme.Layout />
   <ClientOnly>
-    <Watermark v-if="SITE.watermark" fullscreen fixed content="zeMing" :zIndex="0" :fontSize="18" :color="color" />
+    <Watermark v-if="VitePressConfig.watermark" fullscreen fixed content="zeMing" :zIndex="0" :fontSize="18" :color="color" />
   </ClientOnly>
 </template>
 
@@ -9,7 +9,7 @@
 import { ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import { SITE } from '~/vitepress.config'
+import { VitePressConfig } from '~/vitepress.config'
 // import Watermark from './components/watermark'
 
 const color = ref('rgba(0,0,0,.15)')

@@ -1,39 +1,26 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
-import { SITE } from '../vitepress.config'
+import { VitePressConfig } from '../vitepress.config'
 import { createVitePlugins } from '../build/vite/index'
 import { createMarkdownPlugins } from '../build/vite/markdown'
 
 const {
-  lang = 'zh-CN',
-  title = 'zeMinng',
-  description,
-  cleanUrls = true,
-  favicon
-} = SITE
+  siteConfig,
+  themeConfig,
+} = VitePressConfig
 
 export default defineConfig({
-  lang,
-  title,
-  description,
-  cleanUrls,
+  ...siteConfig,
   base: '/',
-  // ignoreDeadLinks: true,
   markdown: {
     lineNumbers: true,
     config: createMarkdownPlugins as any,
   },
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: favicon as string }],
+    ['link', { rel: 'icon', href: '/favicon.ico' }],
   ],
   themeConfig: {
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
-    ],
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
+    ...themeConfig,
   },
   vite: {
     plugins: createVitePlugins(),
