@@ -1,11 +1,16 @@
-import { EnhanceAppContext, inBrowser } from 'vitepress'
+import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-// import Home from './views/Home.vue'
 import './styles/index.scss'
+import Layout from './layouts/MyLayout.vue'
 
-export default {
+const theme: Theme = {
   extends: DefaultTheme,
-  enhanceApp({ app, router }: EnhanceAppContext) {
-    // app.component('Home', Home);
+  Layout,
+  enhanceApp(ctx) {
+    if (typeof DefaultTheme.enhanceApp === 'function') {
+      DefaultTheme.enhanceApp(ctx)
+    }
   },
 }
+
+export default theme
