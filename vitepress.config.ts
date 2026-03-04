@@ -14,6 +14,7 @@ export const VitePressConfig: VitePressConfigType = {
   themeConfig: {
     siteTitle: 'vitepress-theme-blog',
     logo: '/logo.png',
+    outline: [2, 4],
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Examples', link: '/markdown-examples' }
@@ -21,5 +22,9 @@ export const VitePressConfig: VitePressConfigType = {
     socialLinks: [
       { icon: 'github', link: 'https://github.com/zeMinng' }
     ],
+    footer: {
+      message: 'CC BY-NC-SA 4.0 协议',
+      copyright: `版权所有 © 2023-${new Date().getFullYear()} zeMinng | 保留所有权利` 
+    }
   }
 } as const
