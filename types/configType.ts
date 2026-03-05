@@ -20,9 +20,26 @@ interface SiteConfig {
   lastUpdated: boolean // 使用 Git 获取每个页面的最后更新时间戳，可通过 useData 访问
 }
 
-// 主题配置
-interface themeConfig {
+// 首页配置（博客主页）
+interface HomeConfig {
+  /** 首页主标题，一般是作者名或博客名 */
+  heroName: string
+  /** 一句个性签名 / 标语 */
+  tagline: string
+  /** 较长的个人简介，用于介绍作者和博客内容定位 */
+  description: string
+  /** 头像图片路径（相对 public 根目录） */
+  avatar: string
+  /** 社交链接 */
+  socials: {
+    label: string
+    url: string
+  }[]
+}
 
+// 主题扩展配置（在 DefaultTheme.Config 基础上补充博客特有字段）
+interface themeConfig {
+  home?: HomeConfig
 }
 
 // 水印配置

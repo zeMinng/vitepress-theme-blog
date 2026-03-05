@@ -26,7 +26,18 @@ export const VitePressConfig: VitePressConfigType = {
     footer: {
       message: 'CC BY-NC-SA 4.0 协议',
       copyright: `版权所有 © 2023-${new Date().getFullYear()} zeMinng | 保留所有权利` 
-    }
+    },
+    home: {
+      heroName: 'zeMinng',
+      tagline: '好奇心驱动的前端开发者',
+      description:
+        '专注于 Vue、TypeScript 与工程化，也记录一些对前端生态、效率工具和生活灵感的思考。',
+      avatar: '/logo.png',
+      socials: [
+        { label: 'GitHub', url: 'https://github.com/zeMinng' },
+        { label: 'X / Twitter', url: 'https://twitter.com/xiaoxiaoemil' },
+      ],
+    },
   },
   watermarkConfig: {
     enable: true,
