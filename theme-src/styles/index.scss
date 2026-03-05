@@ -1,26 +1,85 @@
 :root {
-  --font-family-number: var(--vp-font-family-base);
-  --vp-nav-bg-color: rgba(255, 255, 255, 0.65); // Nav 透明度
-  --vp-local-nav-bg-color: rgba(255, 255, 255, 0.65);
-  // --vp-c-bg-rgb: 255, 255, 255;
-  // --vp-c-bg-reverse-rgb: 27, 27, 31;
-  // --bprogress-color: var(--vp-c-brand-3); // 进度条颜色
+  /* Scholar's Workbench - Theme Variables */
+  --accent-blue: #3b82f6;
+  --accent-blue-soft: rgba(59, 130, 246, 0.1);
+  
+  /* Light Theme - Warm Paper & Slate */
+  --bg-base: #fcfcfc;
+  --bg-sub: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #1e293b;
+  --text-soft: #475569;
+  --text-muted: #94a3b8;
+  --border-thin: #e2e8f0;
+  --nav-blur: rgba(252, 252, 252, 0.8);
 }
 
 .dark {
-  --vp-nav-bg-color: rgba(24, 24, 27, 0.65); // Nav 透明度
-  --vp-local-nav-bg-color: rgba(24, 24, 27, 0.65);
-  // --vp-c-bg-rgb: 27, 27, 31;
-  // --vp-c-bg-reverse-rgb: 255, 255, 255;
+  /* Dark Theme - Midnight Slate */
+  --bg-base: #0f172a;
+  --bg-sub: #1e293b;
+  --bg-card: #1e293b;
+  --text-main: #f1f5f9;
+  --text-soft: #cbd5e1;
+  --text-muted: #64748b;
+  --border-thin: #334155;
+  --nav-blur: rgba(15, 23, 42, 0.85);
 }
 
-.VPNavBar, 
-.VPLocalNav {
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
-  backdrop-filter: saturate(180%) blur(12px);
-  // border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+/* Global Transitions */
+html {
+  scroll-behavior: smooth;
 }
 
-.dark .VPNavBar {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+body {
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s ease;
+  font-family: 'Geist Sans', 'Inter', -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+/* --- Navigation & Layout Overrides --- */
+.VPNavBar {
+  background-color: var(--nav-blur) !important;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid var(--border-thin) !important;
+}
+
+.VPNavBar .title {
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+}
+
+.VPFooter {
+  background-color: var(--bg-sub) !important;
+  border-top: 1px solid var(--border-thin) !important;
+  padding: 64px 0 !important;
+}
+
+.VPFooter .message,
+.VPFooter .copyright {
+  color: var(--text-muted) !important;
+  font-size: 0.875rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* --- Base Component Styles --- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-thin);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* 仅隐藏默认组件，保留容器以显示自定义 Slot 内容 */
+.VPHomeHero, 
+.VPHomeFeatures { 
+  display: none !important; 
 }
