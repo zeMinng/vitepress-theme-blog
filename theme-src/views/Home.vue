@@ -1,59 +1,87 @@
 <template>
   <main class="home">
     <div class="home-layout">
-      <!-- 左侧：作者信息（更加极简） -->
+      <!-- 左侧：Hero 信息舱 -->
       <section class="home-hero">
         <div class="home-hero__header">
-          <div class="home-hero__avatar">
-            <img :src="avatarWithBase" alt="avatar" />
+          <div class="home-hero__avatar-wrapper">
+            <img class="home-hero__avatar" :src="avatarWithBase" alt="Avatar" />
+            <div class="home-hero__avatar-ring"></div>
           </div>
           <div class="home-hero__title-block">
-            <h1 class="home-hero__title">{{ heroName }}</h1>
+            <h1 class="home-hero__title">
+              {{ heroName }}
+            </h1>
             <p class="home-hero__subtitle">{{ tagline }}</p>
           </div>
         </div>
+        
         <p class="home-hero__desc">
           {{ description }}
         </p>
+        
         <div class="home-hero__actions">
-          <a class="home-hero__btn home-hero__btn--primary" href="/posts/">
-            开始阅读
+          <a class="btn btn--primary" href="/posts/">
+            <span class="btn__text">探索文章</span>
+            <span class="btn__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
           </a>
-          <a class="home-hero__btn home-hero__btn--ghost" href="/about/">
-            关于作者
+          <a class="btn btn--ghost" href="/about/">
+            <span class="btn__text">了解作者</span>
           </a>
         </div>
+        
         <div class="home-hero__socials" v-if="socials.length">
           <a
             v-for="item in socials"
             :key="item.label"
-            class="home-hero__social-link"
+            class="social-link"
             :href="item.url"
             target="_blank"
             rel="noreferrer"
           >
-            {{ item.label }}
+            <span class="social-link__text">{{ item.label }}</span>
+            <div class="social-link__underline"></div>
           </a>
         </div>
       </section>
 
-      <!-- 右侧：最近文章 / 动态 -->
+      <!-- 右侧：动态卡片流 -->
       <section v-if="posts.length" class="home-recent">
         <header class="home-recent__header">
-          <h2 class="home-recent__title">最近更新</h2>
-          <a href="/posts/" class="home-recent__more">查看全部文章</a>
+          <div class="header-title-wrapper">
+            <h2 class="home-recent__title">最近更新</h2>
+          </div>
+          <a href="/posts/" class="home-recent__more">
+            全部
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
         </header>
-        <ul class="home-recent__list">
-          <li v-for="post in posts" :key="post.url" class="home-recent__item">
-            <a :href="post.url" class="home-recent__item-title">
-              {{ post.title }}
-            </a>
-            <p class="home-recent__item-meta">
-              <span v-if="post.date">{{ post.date }}</span>
-              <span v-if="post.description"> · {{ post.description }}</span>
-            </p>
-          </li>
-        </ul>
+
+        <div class="home-recent__grid">
+          <a v-for="(post, index) in posts" :key="post.url" :href="post.url" class="post-card" :style="{ animationDelay: `${index * 100}ms` }">
+            <div class="post-card__content">
+              <h3 class="post-card__title">{{ post.title }}</h3>
+              <p class="post-card__meta">
+                <span class="meta-date" v-if="post.date">
+                  {{ post.date }}
+                </span>
+                <span class="meta-desc" v-if="post.description">{{ post.description }}</span>
+              </p>
+            </div>
+            <div class="post-card__arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </a>
+        </div>
       </section>
     </div>
   </main>
@@ -71,15 +99,14 @@ const {
 } = VitePressConfig
 
 const heroName = home?.heroName || author
-const tagline = home?.tagline || '好奇心驱动的开发者'
+const tagline = home?.tagline || '探索技术与设计的边界'
 const description =
   home?.description ||
-  '记录关于前端开发、VitePress 主题设计与日常思考的文字。'
+  '记录关于前端开发、VitePress 主题设计与日常思考的文字，保持好奇，持续创造。'
 
 const avatarWithBase = computed(() => withBase(home?.avatar || `/${ogImage}`))
 const socials = home?.socials || []
 
-// 最近文章：从 /posts 目录读取 frontmatter
 interface PostMeta {
   title: string
   date?: string
@@ -91,7 +118,6 @@ interface PostModule {
   frontmatter: PostMeta
 }
 
-// 扫描站点里所有 markdown，然后只保留 /posts/ 下的
 const postModules = import.meta.glob<PostModule>('/**/*.md', {
   eager: true,
 })
@@ -100,16 +126,11 @@ const posts = computed(() => {
   const list: { title: string; date?: string; description?: string; url: string }[] = []
 
   for (const path in postModules) {
-    // 只关注 /posts/ 开头的路径
     if (!path.startsWith('/posts/')) continue
-
     const mod = postModules[path] as any
-
-    // 兼容不同导出形式：frontmatter 或 __pageData.frontmatter
     const fm = (mod && (mod.frontmatter || mod.__pageData?.frontmatter)) as PostMeta | undefined
-    if (!fm?.title) continue
+    if (!fm?.title || fm.title === '文章列表') continue
 
-    // VitePress 通常会提供 url 或者可以通过路径自己拼
     const url = (mod && mod.url) || path.replace(/\.md$/, '')
 
     list.push({
@@ -122,196 +143,348 @@ const posts = computed(() => {
 
   return list
     .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
-    .slice(0, 3)
+    .slice(0, 4) // Show 4 premium cards minimum
 })
 </script>
 
 <style lang="scss" scoped>
+/* ==================== 动画定义 ==================== */
+@keyframes slideUpFade {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== 全局容器 ==================== */
 .home {
-  padding: 4.5rem 1.5rem 3.5rem;
+  position: relative;
+  padding: 6rem 1.5rem 5rem;
+  min-height: calc(100vh - var(--vp-nav-height));
+  display: flex;
+  align-items: center;
+  background-color: var(--vp-c-bg); /* 纯粹的背景色 */
 }
 
 .home-layout {
-  max-width: 960px;
+  position: relative;
+  z-index: 10;
+  max-width: 1100px;
   margin: 0 auto;
+  width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.8fr);
-  gap: 2.5rem;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 6rem;
+  align-items: center;
 
-  @media (max-width: 800px) {
-    grid-template-columns: minmax(0, 1fr);
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    padding-top: 2rem;
   }
 }
 
+/* ==================== Hero Section (左侧信息舱) ==================== */
 .home-hero {
-  padding-right: 1rem;
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .home-hero__header {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.home-hero__avatar-wrapper {
+  position: relative;
+  width: 5.5rem;
+  height: 5.5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.home-hero__avatar-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--vp-c-divider);
+  opacity: 0.5;
+  transition: transform 0.4s ease, border-color 0.4s ease;
 }
 
 .home-hero__avatar {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 1.2rem;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--vp-c-bg-soft);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 2;
+  border: 2px solid var(--vp-c-bg);
+}
 
-  img {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
-    object-fit: cover;
-    background: radial-gradient(circle at 30% 0, #e0f2fe, #f8fafc);
-  }
+.home-hero__avatar-wrapper:hover .home-hero__avatar {
+  transform: scale(1.05);
+}
+.home-hero__avatar-wrapper:hover .home-hero__avatar-ring {
+  transform: scale(1.1);
+  border-color: var(--vp-c-text-2);
+}
+
+/* 纯粹排版 */
+.home-hero__title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .home-hero__title {
-  font-size: 2.1rem;
+  font-size: 3.5rem;
   font-weight: 800;
   letter-spacing: -0.04em;
-  margin: 0 0 0.6rem;
-  color: var(--vp-c-text-1);
+  margin: 0;
+  line-height: 1.1;
+  color: var(--vp-c-text-1); /* 纯色标题 */
 
-  @media (min-width: 960px) {
-    font-size: 2.4rem;
+  @media (max-width: 768px) {
+    font-size: 2.8rem;
   }
 }
 
 .home-hero__subtitle {
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   font-weight: 500;
-  color: var(--vp-c-text-1);
-  margin-bottom: 0.6rem;
+  color: var(--vp-c-text-2); /* 降级处理 */
+  margin: 0;
+  letter-spacing: 0.02em;
 }
 
 .home-hero__desc {
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.8;
   color: var(--vp-c-text-2);
-  max-width: 28rem;
-  margin: 0 0 1rem;
+  margin: 0 0 2.5rem;
+  max-width: 90%;
+  font-weight: 400;
 }
 
+/* ==================== 操作按钮 ==================== */
 .home-hero__actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 0.8rem;
-  margin-bottom: 1.2rem;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
 }
 
-.home-hero__btn {
+.btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.55rem 1.2rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  padding: 0.75rem 1.6rem;
+  border-radius: 8px; /* 更方正一点，更有设计感 */
+  font-size: 0.95rem;
+  font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease,
-    transform 0.12s ease;
-  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.home-hero__btn--primary {
-  background-color: var(--vp-c-brand);
-  color: white;
-  box-shadow: 0 14px 30px rgba(56, 189, 248, 0.35);
+.btn__icon {
+  display: inline-flex;
+  margin-left: 0.5rem;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn--primary {
+  background: var(--vp-c-text-1);
+  color: var(--vp-c-bg) !important;
 
   &:hover {
-    background-color: var(--vp-c-brand-3);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    background: var(--vp-c-text-1); /* 保持不变色，更克制 */
+    
+    .btn__icon { transform: translateX(4px); }
   }
 }
 
-.home-hero__btn--ghost {
-  border-color: rgba(148, 163, 184, 0.6);
+.dark .btn--primary:hover {
+  box-shadow: 0 8px 20px rgba(255,255,255,0.15);
+}
+
+.btn--ghost {
+  background: transparent;
   color: var(--vp-c-text-1);
-  background-color: transparent;
-
+  border: 1px solid var(--vp-c-border);
+  
   &:hover {
-    background-color: rgba(148, 163, 184, 0.1);
+    background: var(--vp-c-bg-soft);
+    border-color: var(--vp-c-text-1);
   }
 }
 
+/* ==================== 社交链接 ==================== */
 .home-hero__socials {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  justify-content: flex-start;
-  margin-top: 0.3rem;
+  gap: 1.5rem;
 }
 
-.home-hero__social-link {
-  font-size: 0.85rem;
+.social-link {
+  position: relative;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--vp-c-text-2);
   text-decoration: none;
-  border-bottom: 1px dashed rgba(148, 163, 184, 0.6);
-  padding-bottom: 1px;
+  padding: 0.2rem 0;
+  transition: color 0.2s ease;
 
   &:hover {
-    color: var(--vp-c-brand-1);
-    border-color: var(--vp-c-brand-1);
+    color: var(--vp-c-text-1);
   }
+}
+
+.social-link__underline {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0%; height: 2px;
+  background: var(--vp-c-text-1); /* 纯黑/白下划线 */
+  transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.social-link:hover .social-link__underline {
+  width: 100%;
+}
+
+/* ==================== Recent Updates Section (右侧卡片) ==================== */
+.home-recent {
+  position: relative;
+  z-index: 1;
 }
 
 .home-recent__header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 0.9rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--vp-c-divider);
+  padding-bottom: 1rem;
+  opacity: 0;
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
 }
 
 .home-recent__title {
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: var(--vp-c-text-1);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .home-recent__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
   font-size: 0.85rem;
+  font-weight: 600;
   color: var(--vp-c-text-2);
   text-decoration: none;
+  transition: color 0.3s ease;
 
   &:hover {
-    color: var(--vp-c-brand-1);
+    color: var(--vp-c-text-1);
+    
+    svg { transform: translateX(2px); }
+  }
+
+  svg { transition: transform 0.3s ease; }
+}
+
+/* Minimalist 卡片阵列 */
+.home-recent__grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--vp-c-divider);
+  text-decoration: none;
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: padding-left 0.3s ease, border-color 0.3s ease;
+  
+  &:last-child {
+    border-bottom: none;
   }
 }
 
-.home-recent__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.post-card:hover {
+  padding-left: 1rem;
+  border-bottom-color: var(--vp-c-text-1);
 }
 
-.home-recent__item {
-  padding: 0.55rem 0;
+.post-card__content {
+  flex: 1;
+  padding-right: 1.5rem;
 }
 
-.home-recent__item + .home-recent__item {
-  border-top: 1px dashed rgba(148, 163, 184, 0.35);
-}
-
-.home-recent__item-title {
-  font-size: 0.95rem;
-  font-weight: 500;
+.post-card__title {
+  font-size: 1.15rem;
+  font-weight: 600;
   color: var(--vp-c-text-1);
-  text-decoration: none;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
 
-  &:hover {
-    color: var(--vp-c-brand-1);
+.post-card__meta {
+  margin: 0;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  line-height: 1.5;
+}
+
+.meta-date {
+  color: var(--vp-c-text-3);
+  font-family: var(--font-family-number), monospace;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.meta-desc {
+  color: var(--vp-c-text-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+  
+  &::before {
+    content: '—';
+    margin-right: 0.5rem;
+    color: var(--vp-c-divider);
   }
 }
 
-.home-recent__item-meta {
-  margin-top: 0.1rem;
-  font-size: 0.8rem;
-  color: var(--vp-c-text-2);
+.post-card__arrow {
+  color: var(--vp-c-text-3);
+  transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.post-card:hover .post-card__arrow {
+  color: var(--vp-c-text-1);
+  opacity: 1;
+  transform: translateX(0);
 }
 </style>
