@@ -1,7 +1,9 @@
 import type { VitePressConfigType } from '~/types/configType'
 
+const AUTHOR_NAME = 'zeMinng'
+
 export const VitePressConfig: VitePressConfigType = {
-  author: 'zeMinng',
+  author: AUTHOR_NAME,
   ogImage: 'logo.png',
   siteConfig: {
     title: 'vitepress-theme-blog',
@@ -20,12 +22,12 @@ export const VitePressConfig: VitePressConfigType = {
       { text: '关于', link: '/about/' },
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/zeMinng' },
+      { icon: 'github', link: `https://github.com/${AUTHOR_NAME}` },
       { icon: 'x', link: 'https://twitter.com/xiaoxiaoemil' }
     ],
     footer: {
       message: 'CC BY-NC-SA 4.0 协议',
-      copyright: `版权所有 © 2023-${new Date().getFullYear()} zeMinng | 保留所有权利` 
+      copyright: `版权所有 © 2023-${new Date().getFullYear()} ${AUTHOR_NAME} | 保留所有权利` 
     },
     home: {
       heroName: 'zeMinng',
