@@ -24,3 +24,7 @@
 .dark .VPNavBar {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
+
+.VPContent {
+  display: grid; // 使首页撑满高度
+}
