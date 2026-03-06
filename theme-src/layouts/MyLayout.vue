@@ -24,7 +24,7 @@
 import { computed, shallowRef, onMounted, onBeforeUnmount } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import { VitePressConfig } from '~/vitepress.config'
-import Watermark from '../components/watermark'
+import Watermark from '../components/Watermark'
 // import Home from '../views/Home.vue'
 
 const {
