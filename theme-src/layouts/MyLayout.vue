@@ -1,9 +1,9 @@
 <template>
   <DefaultTheme.Layout>
     <!-- 自定义首页：替换默认 Home Hero -->
-    <template #home-hero-before>
+    <!-- <template #home-hero-before>
       <Home />
-    </template>
+    </template> -->
 
     <template #layout-bottom>
       <ClientOnly>
@@ -25,7 +25,7 @@ import { computed, shallowRef, onMounted, onBeforeUnmount } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import { VitePressConfig } from '~/vitepress.config'
 import Watermark from '../components/watermark'
-import Home from '../views/Home.vue'
+// import Home from '../views/Home.vue'
 
 const {
   watermarkConfig: { enable, text, lightColor, darkColor, fontSize },

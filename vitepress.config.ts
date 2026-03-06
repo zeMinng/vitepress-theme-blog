@@ -29,20 +29,28 @@ export const VitePressConfig: VitePressConfigType = {
       message: 'CC BY-NC-SA 4.0 协议',
       copyright: `版权所有 © 2023-${new Date().getFullYear()} ${AUTHOR_NAME} | 保留所有权利` 
     },
-    home: {
-      heroName: 'zeMinng',
-      tagline: '好奇心驱动的前端开发者',
-      description:
-        '专注于 Vue、TypeScript 与工程化，也记录一些对前端生态、效率工具和生活灵感的思考。',
-      avatar: '/logo.png',
-      socials: [
-        { label: 'GitHub', url: 'https://github.com/zeMinng' },
-        { label: 'X / Twitter', url: 'https://twitter.com/xiaoxiaoemil' },
-      ],
-    },
+  },
+  homeConfig: {
+    heroName: 'vitepress-theme-blog',
+    tagline: AUTHOR_NAME,
+    description: 'A minimalist blog theme for VitePress. | 一款为 VitePress 设计的极简博客主题',
+    avatar: '/logo.png',
+    actions: [
+      { theme: 'brand', text: '开始阅读', link: '/posts/' },
+      { theme: 'alt', text: '关于作者', link: '/about/' },
+    ],
+    features: [
+      { icon: '✍️', title: '文章', details: '沉淀技术实践，分享学习心得与深度思考', },
+      { icon: '🏷️', title: '标签', details: '按技术领域与主题精准检索，快速定位内容', },
+      { icon: '👨‍💻', title: '关于', details: '探索作者的技术成长之路与专业背景', }
+    ],
+    socials: [
+      { label: 'GitHub', url: 'https://github.com/zeMinng' },
+      { label: 'X / Twitter', url: 'https://twitter.com/xiaoxiaoemil' },
+    ],
   },
   watermarkConfig: {
-    enable: true,
+    enable: false,
     text: 'vitepress-theme-blog',
     darkColor: 'rgba(0,0,0,.7)',
     lightColor: 'rgba(0,0,0,.15)',

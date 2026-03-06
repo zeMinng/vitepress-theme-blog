@@ -1,27 +1,23 @@
 <template>
   <main class="home">
-    <section class="home-hero">
-      <div class="home-hero__avatar">
+    <div class="home__bg" aria-hidden="true" />
+    <section class="hero">
+      <div class="hero__avatar">
+        <span class="hero__avatar-ring" />
         <img :src="avatarWithBase" alt="avatar" />
       </div>
-      <h1 class="home-hero__title">{{ heroName }}</h1>
-      <p class="home-hero__subtitle">{{ tagline }}</p>
-      <p class="home-hero__desc">
-        {{ description }}
-      </p>
-      <div class="home-hero__actions">
-        <a class="home-hero__btn home-hero__btn--primary" href="/posts/">
-          开始阅读
-        </a>
-        <a class="home-hero__btn home-hero__btn--ghost" href="/about/">
-          关于作者
-        </a>
-      </div>
-      <div class="home-hero__socials" v-if="socials.length">
+      <h1 class="hero__name">{{ heroName }}</h1>
+      <p class="hero__tagline">{{ tagline }}</p>
+      <p class="hero__desc">{{ description }}</p>
+      <nav class="hero__nav">
+        <a class="hero__link hero__link--main" href="/posts/">文章</a>
+        <a class="hero__link" href="/about/">关于</a>
+      </nav>
+      <div class="hero__socials" v-if="socials.length">
         <a
           v-for="item in socials"
           :key="item.label"
-          class="home-hero__social-link"
+          class="hero__social"
           :href="item.url"
           target="_blank"
           rel="noreferrer"
@@ -55,122 +51,160 @@ const socials = home?.socials || []
 </script>
 
 <style lang="scss" scoped>
+$space-sm: 0.5rem;
+$space-md: 1rem;
+$space-lg: 2rem;
+$space-xl: 2.5rem;
+$space-2xl: 4rem;
+
 .home {
-  padding: 3.5rem 24px 2.5rem;
-  max-width: 720px;
+  position: relative;
+  padding: $space-2xl $space-lg $space-2xl;
+  max-width: 44rem;
   margin: 0 auto;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
-.home-hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.home__bg {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(var(--vp-c-brand-rgb, 56 189 248), 0.08),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
   text-align: center;
-  padding-top: 0.5rem;
 }
 
-.home-hero__avatar {
-  margin-bottom: 1.25rem;
-
-  img {
-    width: 4.5rem;
-    height: 4.5rem;
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.4);
-    object-fit: cover;
-  }
-}
-
-.home-hero__title {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  margin: 0 0 0.4rem;
-  color: var(--vp-c-text-1);
-
-  @media (min-width: 960px) {
-    font-size: 2.4rem;
-  }
-}
-
-.home-hero__subtitle {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--vp-c-text-1);
-  margin-bottom: 0.6rem;
-}
-
-.home-hero__desc {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--vp-c-text-2);
-  max-width: 30rem;
-  margin: 0 auto 1.1rem;
-}
-
-.home-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.8rem;
-  margin-bottom: 1.1rem;
-}
-
-.home-hero__btn {
+.hero__avatar {
+  position: relative;
   display: inline-flex;
+  justify-content: center;
   align-items: center;
-  justify-content: center;
-  padding: 0.55rem 1.2rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
-  border: 1px solid transparent;
+  margin-bottom: $space-lg;
 }
 
-.home-hero__btn--primary {
-  background-color: var(--vp-c-brand);
-  color: white;
-  box-shadow: 0 14px 30px rgba(56, 189, 248, 0.35);
-
-  &:hover {
-    background-color: var(--vp-c-brand-3);
-    transform: translateY(-1px);
-  }
+.hero__avatar-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--vp-c-brand-rgb, 56 189 248), 0.4),
+    rgba(var(--vp-c-brand-rgb, 56 189 248), 0.05)
+  );
+  opacity: 0.6;
+  animation: pulse 4s ease-in-out infinite;
 }
 
-.home-hero__btn--ghost {
-  border-color: rgba(148, 163, 184, 0.6);
+.hero__avatar img {
+  position: relative;
+  display: block;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.dark .hero__avatar img {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.7; }
+}
+
+.hero__name {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+  margin: 0 0 $space-md;
   color: var(--vp-c-text-1);
-  background-color: transparent;
-
-  &:hover {
-    background-color: rgba(148, 163, 184, 0.1);
-  }
 }
 
-.home-hero__socials {
+.hero__tagline {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  margin: 0 0 $space-lg;
+  color: var(--vp-c-text-1);
+}
+
+.hero__desc {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  color: var(--vp-c-text-2);
+  margin: 0 auto $space-xl;
+  max-width: 28rem;
+}
+
+.hero__nav {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
   justify-content: center;
-  margin-top: 0.4rem;
+  align-items: center;
+  gap: $space-md;
+  margin-bottom: $space-xl;
 }
 
-.home-hero__social-link {
-  font-size: 0.85rem;
+.hero__link {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
   color: var(--vp-c-text-2);
   text-decoration: none;
-  border-bottom: 1px dashed rgba(148, 163, 184, 0.6);
-  padding-bottom: 1px;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    color: var(--vp-c-brand-1);
-    border-color: var(--vp-c-brand-1);
+    color: var(--vp-c-text-1);
+    background: var(--vp-c-bg-soft, rgba(128, 128, 128, 0.06));
+    border-color: var(--vp-c-divider, rgba(128, 128, 128, 0.12));
+  }
+
+  &--main {
+    color: #fff;
+    background: var(--vp-c-brand-1);
+
+    &:hover {
+      color: #fff;
+      background: var(--vp-c-brand-2);
+      border-color: transparent;
+    }
+  }
+}
+
+.hero__socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-lg;
+  justify-content: center;
+}
+
+.hero__social {
+  font-size: 0.8125rem;
+  color: var(--vp-c-text-3);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--vp-c-text-2);
   }
 }
 </style>

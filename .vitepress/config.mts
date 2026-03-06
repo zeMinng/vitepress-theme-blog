@@ -7,7 +7,35 @@ import { createMarkdownPlugins } from '../build/vite/markdown'
 const {
   siteConfig,
   themeConfig,
+  homeConfig,
 } = VitePressConfig
+
+/** Generate the default vite press homepage hero and features. */
+const buildHomeFrontmatter = () => {
+  if (!homeConfig) return null
+
+  const {
+    heroName,
+    tagline,
+    description,
+    avatar,
+    actions,
+    features,
+  } = homeConfig
+
+  const hero = {
+    name: heroName,
+    text: tagline,
+    tagline: description,
+    image: { src: avatar, alt: heroName },
+    actions: actions ?? [
+      { theme: 'brand' as const, text: '开始阅读', link: '/posts/' },
+      { theme: 'alt' as const, text: '关于作者', link: '/about/' },
+    ],
+  }
+
+  return { hero, features }
+}
 
 export default defineConfig({
   ...siteConfig,
@@ -47,6 +75,16 @@ export default defineConfig({
       linkText: '回到首页',
       code: '404',
     },
+  },
+  transformPageData(pageData) {
+    // Home page dynamically inject hero and features using home config.
+    if (pageData.relativePath === 'index.md' && pageData.frontmatter.layout === 'home') {
+      const homeData = buildHomeFrontmatter()
+      if (homeData) {
+        pageData.frontmatter.hero = homeData.hero
+        pageData.frontmatter.features = homeData.features
+      }
+    }
   },
   vite: {
     plugins: createVitePlugins(),
