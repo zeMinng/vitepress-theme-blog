@@ -4,12 +4,23 @@ export default createContentLoader('posts/**/*.md', {
   excerpt: true, // 如果你想在列表显示摘要
   transform(raw): PostData[] {
     return raw
-      .map(({ url, frontmatter }) => ({
-        title: frontmatter.title || '无题',
-        url,
-        date: formatDate(frontmatter.date),
-        excerpt: frontmatter.description // 或者使用自动生成的 excerpt
-      }))
+      .filter(({ url }) => {
+        // 排除列表页自身：/posts/ 或 /posts（对应 posts/index.md）
+        const u = url.replace(/\/$/, '')
+        return u !== '/posts'
+      })
+      .map(({ url, frontmatter }) => {
+        const tags = frontmatter.tags != null
+          ? (Array.isArray(frontmatter.tags) ? frontmatter.tags : [frontmatter.tags])
+          : (frontmatter.tag != null ? [frontmatter.tag] : [])
+        return {
+          title: frontmatter.title || '无题',
+          url,
+          date: formatDate(frontmatter.date),
+          excerpt: frontmatter.description,
+          tags: tags.filter(Boolean).map(String)
+        }
+      })
       .sort((a, b) => b.date.time - a.date.time) // 按时间倒序排序
   }
 })
@@ -31,4 +42,5 @@ interface PostData {
   url: string
   date: { time: number; string: string }
   excerpt: string
+  tags: string[]
 }

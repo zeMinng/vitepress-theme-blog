@@ -19,6 +19,8 @@ export const VitePressConfig: VitePressConfigType = {
     nav: [
       { text: '文章', link: '/posts/' },
       { text: '标签', link: '/tags/' },
+      { text: '归档', link: '/archives/' },
+      { text: '资源', link: '/resources/' },
       { text: '关于', link: '/about/' },
     ],
     socialLinks: [

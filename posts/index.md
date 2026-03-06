@@ -1,6 +1,6 @@
 ---
 title: 文章
-layout: doc
+layout: page
 ---
 
 <PostList />

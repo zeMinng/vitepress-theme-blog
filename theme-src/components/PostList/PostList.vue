@@ -48,21 +48,33 @@ function goToPage(page) {
         class="post-card"
       >
         <a :href="post.url" class="post-card__link">
-          <h2 class="post-card__title">
-            {{ post.title }}
-          </h2>
-          <p
-            v-if="post.excerpt"
-            class="post-card__excerpt"
-          >
-            {{ post.excerpt }}
-          </p>
-          <time
-            v-if="post.date && post.date.string"
-            class="post-card__date"
-          >
-            {{ post.date.string }}
-          </time>
+          <div class="headWrap">
+            <div class="post-card__head">
+              <h2 class="post-card__title">
+                {{ post.title }}
+              </h2>
+              <span
+                v-if="post.tags && post.tags.length"
+                class="post-card__tag"
+              >
+                {{ post.tags[0] }}
+              </span>
+            </div>
+            <p
+              v-if="post.excerpt"
+              class="post-card__excerpt"
+            >
+              {{ post.excerpt }}
+            </p>
+          </div>
+          <div class="bottomWrap">
+            <time
+              v-if="post.date && post.date.string"
+              class="post-card__date"
+            >
+              {{ post.date.string }}
+            </time>
+          </div>
         </a>
       </li>
     </ol>
@@ -156,6 +168,13 @@ function goToPage(page) {
     background: var(--vp-c-bg);
   }
 
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
   &__title {
     margin: 0;
     padding: 0;
@@ -164,6 +183,23 @@ function goToPage(page) {
     font-weight: 600;
     line-height: 1.45;
     color: var(--vp-c-text-1);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__tag {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .625rem;
+    background-color: var(--vp-c-bg-alt);
+    color: var(--vp-c-text-2);
+    font-size: .8rem;
+    font-weight: 500;
+    line-height: 1.4;
+    border-radius: .5rem;
+    white-space: nowrap;
+    text-decoration: none;
   }
 
   &__excerpt {
@@ -173,8 +209,14 @@ function goToPage(page) {
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  .bottomWrap  {
+    margin: 1rem 0 0;
+    border-top: 1px solid var(--vp-c-divider);
   }
 
   &__date {
