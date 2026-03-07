@@ -1,7 +1,7 @@
-import { vitepressGenerateTagPagesPlugin } from './tags'
+// import { vitepressGenerateTagPagesPlugin } from './tags'
 
 export function createVitePlugins(): any[] {
   return [
-    vitepressGenerateTagPagesPlugin(),
+    // vitepressGenerateTagPagesPlugin(),
   ]
 }

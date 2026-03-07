@@ -1,6 +1,17 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+/**
+ * @description VitePress 自动化标签页生成插件。
+ * * 该插件会执行以下操作：
+ * 1. 递归扫描 `posts(文章)` 目录下的所有 Markdown 文件。
+ * 2. 解析每个文件的 Frontmatter，提取 `tag` 或 `tags` 字段。
+ * 3. 在 `tags` 目录下为每个唯一标签自动创建一个目录和 `index.md`。
+ * 4. 在生成的 `index.md` 中自动注入 `<TagList tag="..." />` 组件。
+ * * @returns {import('vite').Plugin} 返回一个标准的 Vite 插件对象，用于 VitePress 配置文件。
+ * @author zeMinng
+ */
+
 export function vitepressGenerateTagPagesPlugin(): any {
   let rootDir = process.cwd()
 
@@ -12,7 +23,6 @@ export function vitepressGenerateTagPagesPlugin(): any {
     const tags = new Set<string>()
 
     for (const file of postFiles) {
-      // 排除 posts/index.md
       if (file.replace(/\\/g, '/').endsWith('/posts/index.md')) continue
       const content = await fs.readFile(file, 'utf-8')
       for (const tag of parseTagsFromMarkdown(content)) {
@@ -22,20 +32,20 @@ export function vitepressGenerateTagPagesPlugin(): any {
 
     await fs.mkdir(tagsDir, { recursive: true })
 
-    // 为每个 tag 生成 tags/<encoded>/index.md
     for (const tag of Array.from(tags).sort((a, b) => a.localeCompare(b))) {
       const encoded = encodeURIComponent(tag)
       const outDir = path.join(tagsDir, encoded)
       await fs.mkdir(outDir, { recursive: true })
 
       const mdPath = path.join(outDir, 'index.md')
+      const safe = String(tag).replace(/&/g, '&amp;').replace(/"/g, '&quot;')
       const md = [
         '---',
         `title: ${tag}`,
         'layout: page',
         '---',
         '',
-        `<TagList :tag=${JSON.stringify(tag)} />`,
+        `<TagList tag="${safe}" />`,
         ''
       ].join('\n')
 
@@ -74,7 +84,7 @@ async function listMarkdownFiles(dir: string): Promise<string[]> {
       }
     }
   } catch {
-    // posts 目录不存在时，直接返回空
+    // posts 目录不存在
   }
   return out
 }
@@ -82,8 +92,7 @@ async function listMarkdownFiles(dir: string): Promise<string[]> {
 function parseTagsFromMarkdown(md: string): string[] {
   const m = md.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*(\r?\n|$)/)
   if (!m) return []
-  const fm = m[1]
-  return parseTagsFromFrontmatter(fm)
+  return parseTagsFromFrontmatter(m[1])
 }
 
 function parseTagsFromFrontmatter(fm: string): string[] {
@@ -123,7 +132,6 @@ function parseTagsFromFrontmatter(fm: string): string[] {
       continue
     }
 
-    // tags: \n  - a \n  - b
     for (let j = i + 1; j < lines.length; j++) {
       const item = lines[j].match(/^\s*-\s*(.+)\s*$/)
       if (!item) break
@@ -134,4 +142,3 @@ function parseTagsFromFrontmatter(fm: string): string[] {
 
   return Array.from(new Set(tags))
 }
-
