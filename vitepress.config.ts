@@ -21,6 +21,7 @@ export const VitePressConfig: VitePressConfigType = {
       { text: '标签', link: '/tags/' },
       { text: '归档', link: '/archives/' },
       { text: '资源', link: '/resources/' },
+      { text: '作品', link: '/works/' },
       { text: '关于', link: '/about/' },
     ],
     socialLinks: [
