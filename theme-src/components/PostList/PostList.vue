@@ -48,7 +48,7 @@ function goToPage(page) {
         class="post-card"
       >
         <a :href="post.url" class="post-card__link">
-          <div class="headWrap">
+          <div class="post-card__main">
             <div class="post-card__head">
               <h2 class="post-card__title">
                 {{ post.title }}
@@ -67,14 +67,14 @@ function goToPage(page) {
               {{ post.excerpt }}
             </p>
           </div>
-          <div class="bottomWrap">
+          <footer class="post-card__footer">
             <time
               v-if="post.date && post.date.string"
               class="post-card__date"
             >
               {{ post.date.string }}
             </time>
-          </div>
+          </footer>
         </a>
       </li>
     </ol>
@@ -82,26 +82,35 @@ function goToPage(page) {
     <nav
       v-if="totalPages > 1"
       class="posts__pagination"
+      aria-label="文章分页"
     >
       <button
-        class="pagination-btn"
+        type="button"
+        class="pagination-btn pagination-btn--prev"
         :disabled="currentPage === 1"
+        aria-label="上一页"
         @click="goToPage(currentPage - 1)"
       >
         上一页
       </button>
+      <span class="posts__pagination-pages">
+        <button
+          v-for="page in pages"
+          :key="page"
+          type="button"
+          class="pagination-btn pagination-btn--num"
+          :class="{ 'pagination-btn--active': page === currentPage }"
+          :aria-current="page === currentPage ? 'page' : undefined"
+          @click="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      </span>
       <button
-        v-for="page in pages"
-        :key="page"
-        class="pagination-btn"
-        :class="{ 'is-active': page === currentPage }"
-        @click="goToPage(page)"
-      >
-        {{ page }}
-      </button>
-      <button
-        class="pagination-btn"
+        type="button"
+        class="pagination-btn pagination-btn--next"
         :disabled="currentPage === totalPages"
+        aria-label="下一页"
         @click="goToPage(currentPage + 1)"
       >
         下一页
@@ -120,13 +129,14 @@ function goToPage(page) {
     display: flex;
     align-items: baseline;
     gap: 0.6rem;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.5rem;
   }
 
   &__title {
     font-size: 1.6rem;
     font-weight: 600;
     margin: 0;
+    color: var(--vp-c-text-1);
   }
 
   &__count {
@@ -135,8 +145,9 @@ function goToPage(page) {
   }
 
   &__empty {
-    padding: 2rem;
+    padding: 2rem 0;
     color: var(--vp-c-text-2);
+    font-size: 0.95rem;
   }
 
   &__list {
@@ -145,68 +156,89 @@ function goToPage(page) {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.75rem;
   }
 
   &__pagination {
-    margin-top: 1.6rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--vp-c-divider);
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 0.3rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
   }
 }
-/* 卡片 */
+
 .post-card {
   list-style: none;
 
   &__link {
     display: block;
-    padding: 0.9rem 1rem;
+    padding: 1rem 1.1rem;
     border-radius: 10px;
     border: 1px solid var(--vp-c-divider);
     text-decoration: none;
+    color: inherit;
     background: var(--vp-c-bg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      border-color: var(--vp-c-brand-1);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  &__main {
+    min-width: 0;
   }
 
   &__head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 0.75rem;
   }
 
   &__title {
     margin: 0;
-    padding: 0;
-    border: none;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 600;
-    line-height: 1.45;
+    line-height: 1.4;
     color: var(--vp-c-text-1);
     flex: 1;
     min-width: 0;
+
+    .post-card__link:hover & {
+      color: var(--vp-c-brand-1);
+    }
   }
 
   &__tag {
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
-    padding: .25rem .625rem;
-    background-color: var(--vp-c-bg-alt);
-    color: var(--vp-c-text-2);
-    font-size: .8rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
     font-weight: 500;
-    line-height: 1.4;
-    border-radius: .5rem;
+    color: var(--vp-c-text-3);
+    background: var(--vp-c-bg-soft, rgba(128, 128, 128, 0.08));
+    border-radius: 6px;
     white-space: nowrap;
-    text-decoration: none;
   }
 
   &__excerpt {
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     color: var(--vp-c-text-2);
-    margin: 0.25rem 0 0.35rem;
-    line-height: 1.5;
+    margin: 0.4rem 0 0;
+    line-height: 1.55;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -214,40 +246,59 @@ function goToPage(page) {
     overflow: hidden;
   }
 
-  .bottomWrap  {
-    margin: 1rem 0 0;
+  &__footer {
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
     border-top: 1px solid var(--vp-c-divider);
   }
 
   &__date {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--vp-c-text-3);
-    font-family: var(--vp-font-family-mono);
+    font-family: var(--vp-font-family-mono, monospace);
   }
-
 }
 
-/* 分页 */
 .pagination-btn {
-  min-width: 2rem;
-  height: 2rem;
-  padding: 0 0.5rem;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.6rem;
   font-size: 0.8rem;
-  border-radius: 6px;
+  font-weight: 500;
+  border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
-  background: transparent;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
   cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 
-  &.is-active {
+  &:hover:not(:disabled) {
+    border-color: var(--vp-c-brand-1);
+    color: var(--vp-c-brand-1);
+  }
+
+  &--num {
+    min-width: 2.25rem;
+  }
+
+  &--active {
     background: var(--vp-c-brand-1);
     border-color: var(--vp-c-brand-1);
-    color: white;
+    color: #fff;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  &--prev,
+  &--next {
+    padding: 0 0.75rem;
   }
 
   &:disabled {
-    opacity: 0.4;
+    opacity: 0.45;
     cursor: not-allowed;
   }
-
 }
 </style>
