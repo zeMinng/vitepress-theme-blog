@@ -39,7 +39,7 @@ export const VitePressConfig: VitePressConfigType = {
     description: 'A minimalist blog theme for VitePress. | 一款为 VitePress 设计的极简博客主题',
     avatar: '/logo.png',
     actions: [
-      { theme: 'brand', text: '开始阅读', link: '/posts/' },
+      { theme: 'brand', text: '开始阅读', link: '/postsPage/' },
       { theme: 'alt', text: '关于作者', link: '/about/' },
     ],
     features: [

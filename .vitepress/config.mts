@@ -29,7 +29,7 @@ const buildHomeFrontmatter = () => {
     tagline: description,
     image: { src: avatar, alt: heroName },
     actions: actions ?? [
-      { theme: 'brand' as const, text: '开始阅读', link: '/posts/' },
+      { theme: 'brand' as const, text: '开始阅读', link: '/postsPage' },
       { theme: 'alt' as const, text: '关于作者', link: '/about/' },
     ],
   }
