@@ -1,10 +1,10 @@
 <script setup>
-import { computed } from 'vue'
+import { unref, computed } from 'vue'
 import { withBase, useData } from 'vitepress'
 
 const { frontmatter } = useData()
 const works = computed(() => {
-  const w = frontmatter.value.works
+  const w = unref(frontmatter).works
   return Array.isArray(w) ? w : []
 })
 </script>

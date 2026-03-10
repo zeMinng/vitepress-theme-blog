@@ -121,7 +121,7 @@ function goToPage(page) {
 
 <style scoped lang="scss">
 .posts {
-  max-width: 760px;
+  max-width: 60rem;
   margin: 0 auto;
   padding: 1.5rem 0;
 

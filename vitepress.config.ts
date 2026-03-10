@@ -21,7 +21,7 @@ export const VitePressConfig: VitePressConfigType = {
       { text: '标签', link: '/tagsPage' },
       { text: '归档', link: '/archivesPage' },
       { text: '资源', link: '/resourcesPage' },
-      { text: '作品', link: '/works' },
+      { text: '作品', link: '/works/' },
       { text: '关于', link: '/about' },
     ],
     socialLinks: [
@@ -39,8 +39,8 @@ export const VitePressConfig: VitePressConfigType = {
     description: 'A minimalist blog theme for VitePress. | 一款为 VitePress 设计的极简博客主题',
     avatar: '/logo.png',
     actions: [
-      { theme: 'brand', text: '开始阅读', link: '/postsPage/' },
-      { theme: 'alt', text: '关于作者', link: '/about/' },
+      { theme: 'brand', text: '开始阅读', link: '/postsPage' },
+      { theme: 'alt', text: '关于作者', link: '/about' },
     ],
     features: [
       { icon: '✍️', title: '文章', details: '沉淀技术实践，分享学习心得与深度思考', },
