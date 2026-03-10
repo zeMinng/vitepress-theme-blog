@@ -19,6 +19,8 @@
     ".vitepress/**/*",
     "**/*.ts",
     "**/*.mts",
-    "**/*.vue"
+    "**/*.vue",
+    "theme-src/**/*",
+    "env.d.ts"
   ]
 }

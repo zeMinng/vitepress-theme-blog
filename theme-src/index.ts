@@ -1,25 +1,26 @@
-import type { Theme } from 'vitepress'
+import { defineAsyncComponent, type Component } from 'vue'
+import type { Theme, EnhanceAppContext } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './styles/index.scss'
 import Layout from './layouts/MyLayout.vue'
 import PostList from './components/PostList/PostList.vue'
 import TagList from './components/TagList/TagList.vue'
-import ArchiveList from './components/ArchiveList/ArchiveList.vue'
-import ResourceList from './components/ResourceList/ResourceList.vue'
 
-const theme: Theme = {
+const GLOBAL_COMPONENTS: [string, Component][] = [
+  ['PostList', PostList],
+  ['TagList', TagList],
+  ['ArchiveList', defineAsyncComponent(() => import('./components/ArchiveList/ArchiveList.vue'))],
+  ['ResourceList', defineAsyncComponent(() => import('./components/ResourceList/ResourceList.vue'))],
+]
+
+export default {
   extends: DefaultTheme,
   Layout,
-  enhanceApp(ctx) {
-    if (typeof DefaultTheme.enhanceApp === 'function') {
-      DefaultTheme.enhanceApp(ctx)
-    }
+  enhanceApp(ctx: EnhanceAppContext) {
+    DefaultTheme.enhanceApp?.(ctx)
 
-    ctx.app.component('PostList', PostList)
-    ctx.app.component('TagList', TagList)
-    ctx.app.component('ArchiveList', ArchiveList)
-    ctx.app.component('ResourceList', ResourceList)
+    GLOBAL_COMPONENTS.forEach(([name, comp]) => {
+      ctx.app.component(name, comp)
+    })
   },
-}
-
-export default theme
+} satisfies Theme
